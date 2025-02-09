@@ -26,7 +26,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'we have error', 'error' =>  $validator->errors()], 500);
         }
 
-        // dd($request);
+      try{
+        
 
         // // Create the user
         $user = User::create([
@@ -40,6 +41,12 @@ class AuthController extends Controller
 
         // Return a success response
         return response()->json(['message' => 'Registration successful', 'user' => $user], 201);
+
+    }
+    catch (\Exception $e) {
+        // اگر خطایی رخ داد
+        return response()->json(['message' => 'Error creating user', 'error' => $e->getMessage()], 500);
+    }
     }
 
     // Login function
