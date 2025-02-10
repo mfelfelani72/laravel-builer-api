@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CreateResponseMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+
 
 class AuthController extends Controller
 {
@@ -23,27 +25,26 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
 
-            return response()->json(['message' => 'we have error', 'error' =>  $validator->errors()], 500);
-        }
+            return response()->json(CreateResponseMessage::Error('error_in_validate', $validator->errors()), 500);
+        } else {
 
-        try {
+            try {
+                // Create the user
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password), // Hash the password before saving
+                ]);
 
+                // Optionally, log the user in immediately after registration
+                Auth::login($user);
 
-            // // Create the user
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password), // Hash the password before saving
-            ]);
+                // Return a success response
+                return response()->json(['message' => 'Registration successful', 'user' => $user], 201);
+            } catch (\Exception $e) {
 
-            // Optionally, log the user in immediately after registration
-            Auth::login($user);
-
-            // Return a success response
-            return response()->json(['message' => 'Registration successful', 'user' => $user], 201);
-        } catch (\Exception $e) {
-            // اگر خطایی رخ داد
-            return response()->json(['message' => 'Error creating user', 'error' => $e->getMessage()], 500);
+                return response()->json(['message' => 'Error creating user', 'error' => $e->getMessage()], 500);
+            }
         }
     }
 
