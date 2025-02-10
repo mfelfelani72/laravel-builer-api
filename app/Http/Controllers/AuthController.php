@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Helpers\CreateResponseMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 
 class AuthController extends Controller
@@ -63,17 +63,22 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Login successful'], 200);
-        } else {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        if (!Auth::attempt($credentials)) {
+            return response()->json(CreateResponseMessage::Error("error_in_login", json_decode(json_encode(["user" => "Unauthorized"]))), 401);
         }
+
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json(CreateResponseMessage::Success("user_is_login", json_decode((json_encode(["token" => $token])))), 200);
     }
 
     // Logout function
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::logout();
-        return response()->json(['message' => 'Logged out successfully'], 200);
+        dd("asdasd");
+        // Auth::logout();
+        $request->user()->tokens()->delete();
+        return response()->json(CreateResponseMessage::Success("user_logout", json_decode((json_encode(["" => ""])))), 200);
     }
 }
