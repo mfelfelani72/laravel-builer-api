@@ -68,6 +68,8 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+
+        $user->tokens()->delete();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json(CreateResponseMessage::Success("user_is_login", json_decode((json_encode(["token" => $token])))), 200);
@@ -76,9 +78,6 @@ class AuthController extends Controller
     // Logout function
     public function logout(Request $request)
     {
-
-
-
         try {
 
             $request->user()->currentAccessToken()->delete();
