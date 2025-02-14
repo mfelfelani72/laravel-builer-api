@@ -80,41 +80,14 @@ class AuthController extends Controller
 
 
         try {
-            // بررسی وجود کاربر احراز هویت شده
-            if (!$request->user()) {
-                return response()->json(
-                    ["user not login"],
-                    401
-                );
-            }
 
-            // حذف توکن فعلی کاربر
             $request->user()->currentAccessToken()->delete();
-
-            // پاسخ موفقیت‌آمیز با داده خالی
             return response()->json(
                 CreateResponseMessage::Success("user_logout", new \stdClass()),
                 200
             );
         } catch (\Exception $error) {
-            // پاسخ خطا با پیام مناسب
-            return response()->json(
-                [
-                    $error->getMessage()
-                ],
-
-                500
-            );
+            return response()->json(CreateResponseMessage::Error("error_in_logout", $error), 500);
         }
-
-
-
-        // dd(Auth::getUser());
-        // try {
-        //     $request->user()->token()->delete();
-        //     return response()->json(CreateResponseMessage::Success("user_logout", json_decode((json_encode(["" => ""])))), 200);
-        // } catch (\Exception $error) {
-        //     return response()->json(CreateResponseMessage::Success("user_logout", $error), 500);
-        // }
     }
 }
