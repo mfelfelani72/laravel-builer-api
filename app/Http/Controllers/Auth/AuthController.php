@@ -76,9 +76,45 @@ class AuthController extends Controller
     // Logout function
     public function logout(Request $request)
     {
-        dd(Auth::getUser());
-        // Auth::logout();
-        $request->user()->tokens()->delete();
-        return response()->json(CreateResponseMessage::Success("user_logout", json_decode((json_encode(["" => ""])))), 200);
+
+
+
+        try {
+            // بررسی وجود کاربر احراز هویت شده
+            if (!$request->user()) {
+                return response()->json(
+                    ["user not login"],
+                    401
+                );
+            }
+
+            // حذف توکن فعلی کاربر
+            $request->user()->currentAccessToken()->delete();
+
+            // پاسخ موفقیت‌آمیز با داده خالی
+            return response()->json(
+                CreateResponseMessage::Success("user_logout", new \stdClass()),
+                200
+            );
+        } catch (\Exception $error) {
+            // پاسخ خطا با پیام مناسب
+            return response()->json(
+                [
+                    $error->getMessage()
+                ],
+
+                500
+            );
+        }
+
+
+
+        // dd(Auth::getUser());
+        // try {
+        //     $request->user()->token()->delete();
+        //     return response()->json(CreateResponseMessage::Success("user_logout", json_decode((json_encode(["" => ""])))), 200);
+        // } catch (\Exception $error) {
+        //     return response()->json(CreateResponseMessage::Success("user_logout", $error), 500);
+        // }
     }
 }
