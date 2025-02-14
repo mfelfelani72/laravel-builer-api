@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Helpers\CreateResponseMessage;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Helpers\CreateResponseMessage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-
 
 class AuthController extends Controller
 {
@@ -76,7 +76,7 @@ class AuthController extends Controller
     // Logout function
     public function logout(Request $request)
     {
-        dd("asdasd");
+        dd(Auth::getUser());
         // Auth::logout();
         $request->user()->tokens()->delete();
         return response()->json(CreateResponseMessage::Success("user_logout", json_decode((json_encode(["" => ""])))), 200);
