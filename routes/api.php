@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 
 Route::get('/user', function (Request $request) {
-    dd(",khk");
+    
     return $request->user();
 })->middleware('auth:sanctum');
 
