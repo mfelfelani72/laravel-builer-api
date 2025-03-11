@@ -25,11 +25,11 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
 
-        // if (!env("APP_DEBUG"))
-        //     $exceptions->respond(function (Response $response) {
+        if (!env("APP_DEBUG"))
+            $exceptions->respond(function (Response $response) {
 
-        //         if (!request()->expectsJson()) {
-        //             abort(403);
-        //         } else return response()->json(CreateResponseMessage::Error('error_base', json_decode((json_encode(["error" => $response->getStatusCode()])))), $response->getStatusCode());
-        //     });
+                if (!request()->expectsJson()) {
+                    abort(403);
+                } else return response()->json(CreateResponseMessage::Error('error_base', json_decode((json_encode(["error" => $response->getStatusCode()])))), $response->getStatusCode());
+            });
     })->create();

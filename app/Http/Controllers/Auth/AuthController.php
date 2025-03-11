@@ -64,7 +64,6 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
-            // return response()->json(CreateResponseMessage::Error("error_in_login", json_decode(json_encode(["user" => "Unauthorized"]))), 401);
             return response()->json(CreateResponseMessage::Error("user_didnt_find", json_decode((json_encode(["error_code" => "401"])))), 200);
         }
 
