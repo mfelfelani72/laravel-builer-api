@@ -7,30 +7,32 @@ class CreateResponseMessage
     /**
      * create response message
      *
-     * @param string $text
+     * @param string $message
      * @param object $error
      * @return array
      */
-    public static function Error(string $text, object $error): array
+    public static function Error(string $message, object $error): array
     {
         return [
             "return" => false,
-            "data" => ["message" => $text, "errors" => $error],
+            "message" => $message,
+            "errors" => $error,
         ];
     }
 
-     /**
+    /**
      * create success message
      *
      * @param string $text
      * @param object $record
      * @return array
      */
-    public static function Success(string $text, object $record): array
+    public static function Success(string $message, object $record): array
     {
         return [
             "return" => true,
-            "data" => ["message" => $text, "record" => $record],
+            "message" => $message,
+            "record" => $record,
         ];
     }
 }

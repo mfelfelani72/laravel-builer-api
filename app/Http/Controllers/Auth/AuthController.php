@@ -64,7 +64,8 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(CreateResponseMessage::Error("error_in_login", json_decode(json_encode(["user" => "Unauthorized"]))), 401);
+            // return response()->json(CreateResponseMessage::Error("error_in_login", json_decode(json_encode(["user" => "Unauthorized"]))), 401);
+            return response()->json(CreateResponseMessage::Error("user_didnt_find", json_decode((json_encode(["error_code" => "401"])))), 200);
         }
 
         $user = Auth::user();
@@ -72,7 +73,10 @@ class AuthController extends Controller
         $user->tokens()->delete();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(CreateResponseMessage::Success("user_is_login", json_decode((json_encode(["token" => $token])))), 200);
+        return response()->json(CreateResponseMessage::Success("user_is_login", json_decode((json_encode([
+            "token" => $token,
+            "user" => ["id" => $user->id, "email" => $user->email, "name" => $user->name, "email_verified_at" => $user->email_verified_at]
+        ])))), 200);
     }
 
     // Logout function
