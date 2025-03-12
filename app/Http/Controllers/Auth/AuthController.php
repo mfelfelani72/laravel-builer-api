@@ -35,7 +35,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails())
-            return response()->json(CreateResponseMessage::Error('error_in_validate', $validator->errors()), 500);
+            return response()->json(CreateResponseMessage::Error('error_in_validate', $validator->errors()), 200);
         else {
 
             try {
