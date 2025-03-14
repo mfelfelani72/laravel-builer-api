@@ -1,7 +1,7 @@
-# استفاده از image پایه PHP با PHP-FPM
+# Using the base PHP image with PHP-FPM
 FROM php:8.2-fpm
 
-# نصب dependencies لازم برای لاراول
+# Install the necessary dependencies for Laravel
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -11,24 +11,24 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-# پاکسازی cache
+# Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# نصب PHP extensions مورد نیاز
+# Install required PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# نصب Composer
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# تنظیم دایرکتوری کار
+# Setting the working directory
 WORKDIR /var/www/html
 
-# کپی فایل‌های پروژه لاراول
+# Copy Laravel project files
 COPY src/ .
 
-# نصب dependencies پروژه
+# Install project dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# تنظیم مجوزهای لازم برای لاراول
+# Setting the necessary permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache

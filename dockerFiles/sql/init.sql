@@ -1,0 +1,3 @@
+CREATE USER 'mohammadfe'@'%' IDENTIFIED BY '12345';
+GRANT ALL PRIVILEGES ON *.* TO 'mohammadfe'@'%';
+FLUSH PRIVILEGES;
