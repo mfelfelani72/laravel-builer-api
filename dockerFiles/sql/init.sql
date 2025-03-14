@@ -1,3 +1,3 @@
-CREATE USER 'mohammadfe'@'%' IDENTIFIED BY '12345';
-GRANT ALL PRIVILEGES ON *.* TO 'mohammadfe'@'%';
+CREATE USER 'laravel_builer_api'@'%' IDENTIFIED BY 'sharpmohammad';
+GRANT ALL PRIVILEGES ON *.* TO 'laravel_builer_api'@'%';
 FLUSH PRIVILEGES;

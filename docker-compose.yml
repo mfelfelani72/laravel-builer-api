@@ -7,7 +7,7 @@ services:
     volumes:
       - ./src:/var/www/html
     networks:
-      - laravel_builer_api_network
+      - network
 
   webserver:
     image: nginx:alpine
@@ -20,7 +20,7 @@ services:
     depends_on:
       - app
     networks:
-      - laravel_builer_api_network
+      - network
 
   db:
     image: mysql:5.7
@@ -28,16 +28,15 @@ services:
     environment:
       MYSQL_ROOT_HOST: '%'
       MYSQL_DATABASE: laravel-builer-api
-      MYSQL_USER: mohammadfe
-      MYSQL_PASSWORD: "12345"
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: laravel_builer_api
+      MYSQL_PASSWORD: "sharpmohammad"
     ports:
       - "3307:3306"
     volumes:
       - dbdata:/var/lib/mysql
       - ./dockerFiles/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - laravel_builer_api_network
+      - network
     command: [
         "mysqld",
         "--init-file=/docker-entrypoint-initdb.d/init.sql"
@@ -47,5 +46,5 @@ volumes:
   dbdata:
 
 networks:
-  laravel_builer_api_network:
+  network:
     driver: bridge

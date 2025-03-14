@@ -21,3 +21,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/dockerFiles/sql/init.sql
+docker-compose.yml
