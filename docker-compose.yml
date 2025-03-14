@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel_builer_api
+    container_name: laravel_builer_api_app
     volumes:
       - ./src:/var/www/html
     networks:
