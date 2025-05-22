@@ -34,6 +34,7 @@ class AuthController extends Controller
             'password_confirmation.same' => 'password_confirmation_same',
         ]);
 
+
         if ($validator->fails())
             return response()->json(CreateResponseMessage::Error('error_in_validate', $validator->errors()), 200);
         else {
@@ -64,7 +65,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(CreateResponseMessage::Error("user_didnt_find", json_decode((json_encode(["error_code" => "401"])))), 200);
+            return response()->json(CreateResponseMessage::Error("user_didnt_find",  json_decode(json_encode(["error_code" => "401"]))), 200);
         }
 
         $user = Auth::user();

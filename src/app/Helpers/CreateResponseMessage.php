@@ -13,11 +13,10 @@ class CreateResponseMessage
      */
     public static function Error(string $message, object $error): array
     {
-
         return [
             "return" => false,
             "message" => $message,
-            "errors" => ["email" => $error->first() ? $error->first('email') : ""],
+            "errors" => $error,
         ];
     }
 
