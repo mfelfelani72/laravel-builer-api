@@ -17,18 +17,18 @@ class AuthController extends Controller
     {
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
+            // 'name' => 'required',
             'email' => 'required|email|unique:users',
             // 'password' => 'required|min:5|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'password' => 'required|min:5',
             'password_confirmation' => 'required|same:password',
         ], [
-            'name.required' => 'name_required',
+            // 'name.required' => 'name_required',
             'email.required' => 'email_required',
             'email.email' => 'email_not_available_email',
             'email.unique' => 'email_not_unique',
             'password.required' => 'password_required',
-            'password.min' => 'password_min_8',
+            'password.min' => 'password_min_5',
             // 'password.regex' => 'password_regex',
             'password_confirmation.required' => 'password_confirmation_required',
             'password_confirmation.same' => 'password_confirmation_same',
@@ -42,16 +42,25 @@ class AuthController extends Controller
             try {
                 // Create the user
                 $user = User::create([
-                    'name' => $request->name,
+                    // 'name' => $request->name,
+                    'name' => $request->email,
                     'email' => $request->email,
                     'password' => Hash::make($request->password), // Hash the password before saving
                 ]);
 
                 // Optionally, log the user in immediately after registration
                 Auth::login($user);
+                $user = Auth::user();
+
+                $user->tokens()->delete();
+                $token = $user->createToken('auth_token')->plainTextToken;
 
                 // Return a success response
-                return response()->json(CreateResponseMessage::Success('registration_successful', $user), 201);
+
+                return response()->json(CreateResponseMessage::Success("registration_successful", json_decode((json_encode([
+                    "token" => $token,
+                    "user" => ["id" => $user->id, "email" => $user->email, "name" => $user->name, "email_verified_at" => $user->email_verified_at]
+                ])))), 201);
             } catch (\Exception $error) {
 
                 return response()->json(CreateResponseMessage::Error('error_in_create_user', $error), 500);
